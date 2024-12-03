@@ -12,6 +12,7 @@ return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\makrem' => $baseDir . '/app/Http/Controllers/makrem.php',
     'App\\Http\\Controllers\\samah' => $baseDir . '/app/Http/Controllers/samah.php',
+    'App\\Http\\Controllers\\test' => $baseDir . '/app/Http/Controllers/test.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
     'App\\Http\\Middleware\\EncryptCookies' => $baseDir . '/app/Http/Middleware/EncryptCookies.php',
