@@ -29,9 +29,3 @@ Route::post('avis',[AvisController::class,'store']);
 Route::put('avis/{id}',[AvisController::class,'update']);
 Route::delete('avis/{id}',[AvisController::class,'destroy']);
 Route::get('avis/{id}',[AvisController::class,'show']);
-
-Route::get('avifs',[AvisController::class,'index']);
-Route::post('avfis',[AvisController::class,'store']);
-Route::put('avifs/{id}',[AvisController::class,'update']);
-Route::delete('afvis/{id}',[AvisController::class,'destroy']);
-Route::get('avfis/{id}',[AvisController::class,'show']);
