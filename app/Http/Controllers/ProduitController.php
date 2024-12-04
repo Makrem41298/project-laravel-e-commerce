@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produit;
+use App\Models\paiement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -11,7 +11,7 @@ class ProduitController extends Controller
 {
 
     public function index(){
-        $produits= Produit::all();
+        $produits= paiement::all();
         return response()->json($produits);
     }
     public function store(Request $request){
@@ -27,7 +27,7 @@ class ProduitController extends Controller
             return response()->json(["message"=>$validation->errors()],404);
         }
         try {
-            $produit=Produit::create($request->all());
+            $produit=paiement::create($request->all());
             return response()->json(["message"=>$produit],200);
 
         }catch (\Exception $exception){
@@ -37,16 +37,16 @@ class ProduitController extends Controller
 
     }
     public function update(Request $request,$id){
-        $produit=Produit::find($id);
+        $produit=paiement::find($id);
         $produit->update($request->all());
         return response()->json($produit,200);
     }
     public function destroy($id){
-        Produit::destroy($id);
+        paiement::destroy($id);
         return response()->json(null,204);
     }
     public function show($id){
-        $produit=Produit::find($id);
+        $produit=paiement::find($id);
         return response()->json($produit,200);
 
     }
