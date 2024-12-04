@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\CategorieController;
-use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\roleController;
 
 use Illuminate\Http\Request;
@@ -25,8 +24,8 @@ Route::delete('categories/{id}',[CategorieController::class,'destroy']);
 Route::get('categories/{id}',[CategorieController::class,'show']);
 
 
-Route::get('produit',[ProduitController::class,'index']);
-Route::post('produit',[ProduitController::class,'store']);
-Route::put('produit/{id}',[ProduitController::class,'update']);
-Route::delete('produit/{id}',[ProduitController::class,'destroy']);
-Route::get('produit/{id}',[ProduitController::class,'show']);
+Route::get('role',[roleController::class,'index']);
+Route::post('role',[roleController::class,'store']);
+Route::put('role/{id}',[roleController::class,'update']);
+Route::delete('role/{id}',[roleController::class,'destroy']);
+Route::get('role/{id}',[roleController::class,'show']);
