@@ -4,15 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Categorie extends Model
+class Paiment extends Model
 {
     use HasFactory;
     protected $guarded=[];
 
-    public function produits():HasMany
+
+    public function paiement():BelongsTo
     {
-        return $this->hasMany(Produit::class);
+        return $this->belongsTo(Commande::class);
     }
+
 }
