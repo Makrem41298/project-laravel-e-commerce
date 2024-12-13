@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Produit extends Model
 {
@@ -15,9 +17,24 @@ class Produit extends Model
     {
         return $this->belongsTo(Categorie::class);
     }
-    public function Commandes(): BelongsToMany
+    public function commandes(): BelongsToMany
     {
         return $this->belongsToMany(Commande::class,'passe_commandes');
     }
+    public function images():HasMany
+    {
+        return $this->hasMany(image::class);
+
+    }
+    public function paiement(): HasMany
+    {
+        return  $this->hasMany(Paiment::class);
+
+    }
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class,'avis');
+    }
+
 
 }

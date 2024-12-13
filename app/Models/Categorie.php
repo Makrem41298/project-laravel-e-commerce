@@ -10,8 +10,9 @@ class Categorie extends Model
 {
     use HasFactory;
     protected $guarded=[];
+    protected $table="makrem";
 
-    public function produits(): HasMany
+    public function produits():HasMany
     {
         return $this->hasMany(Produit::class);
     }
