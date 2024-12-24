@@ -50,7 +50,7 @@ class User extends Authenticatable
     }
     public function produits():BelongsToMany
     {
-       return $this->belongsToMany(Produit::class,'avis');
+       return $this->belongsToMany(Categorie::class,'avis');
 
     }
 }

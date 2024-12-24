@@ -111,6 +111,17 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
+            // Autres brokers existants...
+
+        'employes' => [
+                'provider' => 'employees',
+                'table' => 'password_reset_tokens',
+                'expire' => 60, // Durée de validité du token en minutes
+                'throttle' => 60, // Délai avant une nouvelle demande
+        ],
+
+
     ],
 
     /*

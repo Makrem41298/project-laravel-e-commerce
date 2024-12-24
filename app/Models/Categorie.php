@@ -13,6 +13,6 @@ class Categorie extends Model
 
     public function produits():HasMany
     {
-        return $this->hasMany(Produit::class);
+        return $this->hasMany(Categorie::class);
     }
 }

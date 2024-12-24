@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\avis;
+use App\Models\Avis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 

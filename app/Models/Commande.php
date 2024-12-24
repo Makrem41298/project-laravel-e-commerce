@@ -12,7 +12,7 @@ class Commande extends Model
     use HasFactory;
     public function produits(): BelongsToMany
     {
-        return $this->belongsToMany(Produit::class,'passe_commandes');
+        return $this->belongsToMany(Categorie::class,'passe_commandes');
     }
     public function user(): BelongsTo
     {

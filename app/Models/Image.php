@@ -12,7 +12,7 @@ class Image extends Model
     protected $guarded=[];
     public function produit():BelongsTo
     {
-        return $this->belongsTo(produit::class);
+        return $this->belongsTo(Categorie::class);
 
     }
 
