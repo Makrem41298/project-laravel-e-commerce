@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('avis', function (Blueprint $table) {
             $table->id();
-            $table->timestamps('date_publication');
+            $table->smallInteger('avis')->unsigned()->nullable();
             $table->string('description');
-            $table->foreignId("user_id")->constrained('avis');
+            $table->foreignId("user_id")->constrained('users');
+            $table->timestamps();
+
 
 
         });

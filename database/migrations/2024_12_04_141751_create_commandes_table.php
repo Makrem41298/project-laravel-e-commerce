@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('commandes', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // Primary key
+            $table->foreignId('user_id')->constrained('users');// Foreign key for the user placing the order
+            $table->enum('order_type', ['online', 'in-store']);// Type of order            $table->timestamps();
+            $table->enum('order_status', ['pending', 'completed', 'cancelled']);
             $table->timestamps();
         });
     }
