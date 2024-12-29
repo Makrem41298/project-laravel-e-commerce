@@ -11,6 +11,10 @@ class EmployController extends Controller
     /**
      * Afficher les informations d'un employé.
      */
+    public function index(){
+        $employ=Employ::all();
+        return response()->json(['success' => true, 'data' => $employ],200);
+    }
     public function show($id)
     {
         try {
@@ -24,11 +28,11 @@ class EmployController extends Controller
     /**
      * Mettre à jour les informations d'un employé.
      */
-    public function update(Request $request, $id)
+    public function create(Request $request)
     {
         $validate = Validator::make($request->all(), [
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:employes,email,' . $id,
+            'email' => 'sometimes|email|unique:employes,email,',
             'password' => 'sometimes|string|min:8',
         ]);
 
@@ -37,15 +41,9 @@ class EmployController extends Controller
         }
 
         try {
-            $employ = Employ::findOrFail($id);
+            $employ = Employ::create($request->all());
 
-            // Mise à jour des champs
-            $data = $request->only(['name', 'email']);
-            if ($request->filled('password')) {
-                $data['password'] = bcrypt($request->password);
-            }
 
-            $employ->update($data);
 
             return response()->json(['success' => true, 'data' => $employ], 200);
         } catch (\Exception $e) {

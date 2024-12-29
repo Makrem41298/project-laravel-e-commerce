@@ -11,4 +11,5 @@ class Avis extends Pivot
     use HasFactory;
     protected $guarded=[];
 
+
 }

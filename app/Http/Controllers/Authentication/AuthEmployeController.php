@@ -76,7 +76,7 @@ class AuthEmployeController extends Controller
     public function forgotPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:employes',
+            'email' => 'required|email|exists:employs',
 
         ]);
         if ($validator->fails()) {
@@ -115,6 +115,27 @@ class AuthEmployeController extends Controller
         return $status === Password::PASSWORD_RESET
             ?response()->json(['message' => __($status)],200)
             :response()->json(['message' => __($status)],400);
+    }
+    public function changePassword(Request $request){
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required|string|min:6|current_password',
+            'password' => 'required|string|confirmed|min:6',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+        try {
+            $user=auth()->guard('employs')->user();
+            $user->forceFill([
+                'password' => Hash::make($request->password)
+            ]);
+            $user->save();
+            return response()->json(['message' => "Password has been changed"], 201);
+        }catch (\Exception $e){
+            return response()->json(['error' => $e], 401);
+
+        }
+
     }
 
 }

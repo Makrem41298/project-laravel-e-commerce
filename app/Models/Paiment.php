@@ -14,7 +14,7 @@ class Paiment extends Model
     protected $guarded=[];
 
 
-    public function paiement():BelongsTo
+    public function commande():BelongsTo
     {
         return $this->belongsTo(Commande::class);
     }
