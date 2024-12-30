@@ -26,7 +26,7 @@ Route::get('categories/{id}',[CategorieController::class,'show']);
 
 Route::group(['controller' => CategorieController::class,
     'prefix' => 'categories',
-    'middleware' => ['verifiedToken:employs','permission:permissionsCategories']],function () {
+    'middleware' => ['verifiedToken:employs']],function () {
     Route::post('/','store');
     Route::put('/{id}','update');
     Route::delete('/{id}','destroy');
@@ -66,8 +66,8 @@ Route::delete('/produits/{id}', [ProduitController::class, 'destroy'])->middlewa
 
 //Route commands
 
-Route::get('/commandes', [CommandeController::class, 'index'])->middleware('verifiedToken');
-Route::post('/commandes', [CommandeController::class, 'store'])->middleware('verifiedToken');
+Route::get('/commandes', [CommandeController::class, 'index'])->middleware('verifiedToken:employs,users');
+Route::post('/commandes', [CommandeController::class, 'store'])->middleware('verifiedToken:employs,users');
 Route::put('/commandes/{id}/status', [CommandeController::class, 'updateStatusOrder'])->middleware('verifiedToken');
 Route::get('/commandes/{id}', [CommandeController::class, 'show'])->middleware('verifiedToken');
 Route::delete('/commandes/{id}', [CommandeController::class, 'delete'])->middleware('verifiedToken');

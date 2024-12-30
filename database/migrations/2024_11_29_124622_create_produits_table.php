@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('prix',5,2);
             $table->string('description');
             $table->smallInteger('quantite');
+            $table->enum('status',['en_stock','hours_stock'])->default('en_stock');
             $table->timestamps();
         });
     }

@@ -15,7 +15,7 @@ class EmployFactory extends Factory
         return [
 
             'name' => fake()->name(),
-            'email' => 'makrem05@gmail.com',
+            'email' => 'makrem050@gmail.com',
             'email_verified_at' => now(),
             'password' => bcrypt('123456789'), // password
             'remember_token' => Str::random(10),

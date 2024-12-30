@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('commandes', function (Blueprint $table) {
             $table->id(); // Primary key
-            $table->foreignId('user_id')->constrained('users');// Foreign key for the user placing the order
-            $table->enum('order_type', ['online', 'in-store']);// Type of order            $table->timestamps();
+            $table->bigInteger('commandeable_id')->unsigned();
+            $table->string('commandeable_type');
+            $table->enum('order_type', ['online', 'in-store']);
             $table->enum('order_status', ['pending', 'completed', 'cancelled']);
+            $table->string('phone')->nullable();
+            $table->string('ville')->nullable();
+            $table->integer('code_postal')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
         });
     }

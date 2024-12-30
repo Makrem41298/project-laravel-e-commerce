@@ -30,6 +30,8 @@ class JwtMiddleware extends BaseMiddleware
 
             $user = auth($guard)->setToken(JWTAuth::getToken())->authenticate();
             Log::info('Authenticated user:', ['user' => $user]);
+            $request->userAction =auth($guard)->user();
+
 
 
 

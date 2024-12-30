@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Commande extends Model
 {
@@ -17,11 +18,11 @@ class Commande extends Model
     {
         return $this->belongsToMany(Produit::class,'passe_commandes')->withPivot('quantite');
     }
-    public function user(): BelongsTo
+    public function commandeable(): MorphTo
     {
-      return $this->belongsTo(User::class);
-
+        return $this->morphTo();
     }
+
     public function paiment(): HasOne
     {
         return $this->hasOne(Paiment::class);
