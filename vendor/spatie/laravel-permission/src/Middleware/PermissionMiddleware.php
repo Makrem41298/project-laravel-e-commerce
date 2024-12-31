@@ -4,7 +4,6 @@ namespace Spatie\Permission\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Exceptions\UnauthorizedException;
 use Spatie\Permission\Guard;
 
 class PermissionMiddleware
@@ -21,11 +20,17 @@ class PermissionMiddleware
         }
 
         if (! $user) {
-            throw UnauthorizedException::notLoggedIn();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User is not logged in.',
+            ], 401); // 401 Unauthorized
         }
 
         if (! method_exists($user, 'hasAnyPermission')) {
-            throw UnauthorizedException::missingTraitHasRoles($user);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The User model does not use the HasPermissions trait.',
+            ], 403); // 403 Forbidden
         }
 
         $permissions = is_array($permission)
@@ -33,7 +38,11 @@ class PermissionMiddleware
             : explode('|', $permission);
 
         if (! $user->canAny($permissions)) {
-            throw UnauthorizedException::forPermissions($permissions);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User does not have the required permissions.',
+                'required_permissions' => $permissions,
+            ], 403); // 403 Forbidden
         }
 
         return $next($request);

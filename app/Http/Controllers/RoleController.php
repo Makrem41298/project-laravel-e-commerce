@@ -24,7 +24,7 @@ class RoleController extends Controller
     {
       $validate=Validator::make($request->all(),[
           'name' => 'required|unique:roles|max:255',
-          'permissions.*' => 'required|exists:permissions,id',
+          'permissions.*' => 'required|exists:permissions,name',
 
       ]);
       if ($validate->fails()){
@@ -33,6 +33,7 @@ class RoleController extends Controller
 
         $role = Role::create([
             'name' => $request->name,
+            'guard_name' => 'employs'
         ]);
         $role->givePermissionTo($request->permission);
 
@@ -53,23 +54,33 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validate=Validator::make($request->all(),[
             'name' => 'sometimes|unique:roles,name,' . $id . '|max:255',
-            'permissions.*' => 'sometimes|exists:permissions,id',
+            'permissions.*' => 'sometimes|exists:permissions,name',
         ]);
+        if ($validate->fails()){
+            return response()->json(['message'=>$validate->errors()]);
+        }
+        try {
+            $role = Role::findOrfail($id);
+            if ($request->has('name')) {
+                $role->update([
+                    'name' => $request->name,
+                ]);
+            }
 
-        if ($request->has('name')) {
-            $role = Role::findOrFail($id);
-            $role->update([
-                'name' => $request->name,
-            ]);
+            if ($request->has('permissions')) {
+                $role->syncPermissions($request->permissions);
+            }
+
+            return response()->json(['message' => 'Role updated successfully', 'role' => $role]);
+
+        }catch (\Exception $e){
+            return response()->json(['message'=>$e->getMessage()]);
         }
 
-        if ($request->has('permissions')) {
-            $role->syncPermissions($request->permissions);
-        }
 
-        return response()->json(['message' => 'Role updated successfully', 'role' => $role]);
+
     }
 
     /**

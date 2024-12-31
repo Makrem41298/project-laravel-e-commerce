@@ -18,35 +18,30 @@ class JwtMiddleware extends BaseMiddleware
      * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, Closure $next, ...$guards)
     {
-        if ($guard != null) {
+        if (empty($guards)) {
+            $guards = [null]; // Default guard
+        }
+
+        foreach ($guards as $guard) {
             auth()->shouldUse($guard); // Set the specified guard
             Log::info('Guard being used:', ['guard' => auth()->getDefaultDriver()]);
 
-        }
+            try {
+                $user = auth($guard)->setToken(JWTAuth::getToken())->authenticate();
+                Log::info('Authenticated user:', ['user' => $user]);
+                $request->userAction = auth($guard)->user();
+                log::info('Authenticated user:', ['user' => $user]);
 
-        try {
-
-            $user = auth($guard)->setToken(JWTAuth::getToken())->authenticate();
-            Log::info('Authenticated user:', ['user' => $user]);
-            $request->userAction =auth($guard)->user();
-
-
-
-
-            // Add debugging code
-        } catch (Exception $e) {
-            if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
-                return response()->json(['status' => 'Token is Invalid'], 401);
-            } else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
-                return response()->json(['status' => 'Token is Expired'], 401);
-            } else {
-                return response()->json(['status' => 'Authorization Token not found'], 401);
+                return $next($request);
+            } catch (Exception $e) {
+                // Continue to the next guard if authentication fails
+                continue;
             }
         }
 
-        return $next($request);
+        // If no guard could authenticate the user, return an error response
+        return response()->json(['status' => 'Authorization Token not found'], 401);
     }
 }
-

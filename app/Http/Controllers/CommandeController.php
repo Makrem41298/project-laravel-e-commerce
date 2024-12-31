@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commande;
+use App\Models\Employ;
 use App\Models\Produit;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,13 +15,22 @@ class CommandeController extends Controller
     /**
      * Récupérer toutes les commandes avec les relations.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $commandes = Commande::with('commandeable', 'produits', 'paiment')->get();
+            // Check if the authenticated user is an instance of Employ
+            if ($request->userAction instanceof Employ) {
+                // Fetch all commandes with related data for Employ
+                $commandes = Commande::with('commandeable', 'produits', 'paiment')->get();
+            } else {
+                // Fetch commandes associated with the authenticated user (non-Employ)
+                $commandes = $request->userAction->commandes()->with('commandeable', 'produits', 'paiment')->get();
+            }
+
             return response()->json(['success' => true, 'data' => $commandes], 200);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+
+            return response()->json(['success' => false, 'error' => 'An error occurred while fetching commandes.'], 500);
         }
     }
 
@@ -45,6 +55,7 @@ class CommandeController extends Controller
             'produits.*.quantite' => 'required|numeric|min:1',
             'phone' => 'required|string',
             'address' => [
+
                 Rule::when(get_class($request->userAction) === User::class, [
                     'required',
                     'string'
@@ -113,8 +124,14 @@ class CommandeController extends Controller
     {
         $validation = Validator::make(array_merge($request->all(), ['id' => $id]), [
             'id' => 'required|exists:commandes,id',
-            'status' => 'required|string|in:pending,completed,canceled',
+            'status' => ['required','string',Rule::in(['pending','completed','cancelled'],function ($attribute, $value, $fail)use($request) {
+                if($value==='pending'||$value='completed'&&$request->get($request->userAction)==User::class){
+                    $fail('Access not authorized.');
+
+                }
+            })],
         ]);
+
 
         if ($validation->fails()) {
             return response()->json(['success' => false, 'errors' => $validation->errors()], 400);
@@ -124,7 +141,7 @@ class CommandeController extends Controller
             $commande = Commande::findOrFail($id);
             $commande->update(['order_status' => $request->status]);
 
-            return response()->json(['success' => true, 'data' => $commande->load('user', 'produits', 'paiment')], 200);
+            return response()->json(['success' => true, 'data' => $commande->load('commandeable', 'produits', 'paiment')], 200);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
@@ -144,7 +161,7 @@ class CommandeController extends Controller
         }
 
         try {
-            $commande = Commande::with('user', 'produits', 'paiment')->findOrFail($id);
+            $commande = Commande::with('commandeable', 'produits', 'paiment')->findOrFail($id);
             return response()->json(['success' => true, 'data' => $commande], 200);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);

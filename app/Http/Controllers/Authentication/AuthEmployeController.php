@@ -55,7 +55,7 @@ class AuthEmployeController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function userProfile() {
-        return response()->json(auth()->guard('employs')->user());
+        return response()->json(auth()->guard('employs')->user()->load('roles'));
     }
 
     /**
@@ -94,7 +94,7 @@ class AuthEmployeController extends Controller
     public function resetPassword(Request $request){
         $validator = Validator::make($request->all(), [
             'token' => 'required',
-            'email' => 'required|email|exists:employes',
+            'email' => 'required|email|exists:employs',
             'password' => 'required|string|confirmed|min:6',
         ]);
         if ($validator->fails()) {
