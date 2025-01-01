@@ -5,6 +5,7 @@ use App\Http\Controllers\Authentication\AuthUserController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\CategorieController;
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProduitController;
 
 
@@ -139,3 +140,9 @@ Route::get('/permissions',function (){
     }
    return response()->json(['status' => true,'date'=>$permissions]);
 })->middleware('verifiedToken:employs,permission:permissionsRole');
+Route::middleware('verifiedToken:employs,role:Super_Admin')->group(function (){
+    Route::get('/dashboard', [DashboardController::class, 'Super_Admin']);
+    Route::get('/reviews', [DashboardController::class, 'totleReviwes']);
+});
+
+
